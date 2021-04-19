@@ -159,12 +159,14 @@ const getGamesArr = () => {
 };
 
 const toggleFlip = (id) => {
-  const { room } = findGameById(id);
+  const game = findGameById(id);
 
-  if (games[room].player1.id === id) {
-    games[room].player1.flipped = !games[room].player1.flipped;
-  } else if (games[room].player2.id === id) {
-    games[room].player2.flipped = !games[room].player2.flipped;
+  if (!game) return;
+
+  if (game.player1.id === id) {
+    game.player1.flipped = !game.player1.flipped;
+  } else if (game.player2.id === id) {
+    game.player2.flipped = !game.player2.flipped;
   }
 };
 
