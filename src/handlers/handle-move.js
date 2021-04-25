@@ -19,7 +19,7 @@ const handleMove = function ({ updatedBoard, ...data }, socket, io) {
 
   if (!fromPlayer || !toPlayer) return;
 
-  const time = setTime(io, socket.id, room);
+  const time = setTime(io, socket.id, data.room);
   io.in(data.room).emit("setTime", time);
 
   let flippedBoard;
