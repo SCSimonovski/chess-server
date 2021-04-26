@@ -11,10 +11,12 @@ const handleMove = function ({ updatedBoard, ...data }, socket, io) {
   if (socket.id === game.player1.id) {
     fromPlayer = game.player1;
     toPlayer = game.player2;
+    game.sideOnMove = game.player2.side;
   }
   if (socket.id === game.player2.id) {
     fromPlayer = game.player2;
     toPlayer = game.player1;
+    game.sideOnMove = game.player1.side;
   }
 
   if (!fromPlayer || !toPlayer) return;

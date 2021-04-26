@@ -22,6 +22,7 @@ const handleSpectator = function (data, acknowledgement) {
       side: game.player2.side,
     },
     time: game.time,
+    sideOnMove: game.sideOnMove,
     isPlaying: game.isPlaying,
     room: game.room,
   });

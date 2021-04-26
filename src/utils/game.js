@@ -18,6 +18,7 @@ const createGame = (id, { username, room, code, time, allowSpectators }) => {
     isFull: false,
     flip: true,
     board: null,
+    sideOnMove: "white",
 
     player1: {
       id,
