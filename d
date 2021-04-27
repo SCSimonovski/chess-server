@@ -1,0 +1,56 @@
+[1mdiff --git a/src/handlers/handle-disconnect.js b/src/handlers/handle-disconnect.js[m
+[1mindex 77b2969..8a8a7eb 100644[m
+[1m--- a/src/handlers/handle-disconnect.js[m
+[1m+++ b/src/handlers/handle-disconnect.js[m
+[36m@@ -1,10 +1,8 @@[m
+ const { removeUserFromGame, getGamesArr } = require("../utils/game.js");[m
+ [m
+[31m-const handleDisconnect = function () {[m
+[31m-  const socket = this;[m
+[31m-[m
+[32m+[m[32mconst handleDisconnect = function (socket, io) {[m
+   let game = removeUserFromGame(socket.id);[m
+[31m-  socket.broadcast.emit("activeGames", getGamesArr());[m
+[32m+[m[32m  io.emit("activeGames", getGamesArr());[m
+ [m
+   if (game)[m
+     socket.broadcast.emit("roomIsFull", { room: game.room, isFull: false });[m
+[1mdiff --git a/src/handlers/handle-game-over.js b/src/handlers/handle-game-over.js[m
+[1mindex 17e3ba0..3000590 100644[m
+[1m--- a/src/handlers/handle-game-over.js[m
+[1m+++ b/src/handlers/handle-game-over.js[m
+[36m@@ -4,11 +4,15 @@[m [mconst handleGameOver = function (message) {[m
+   const socket = this;[m
+   const game = findGameById(socket.id);[m
+ [m
+[31m-  if (game) {[m
+[31m-    clearInterval(game.timer);[m
+[31m-    game.time = { ...game.resetTime };[m
+[31m-    socket.to(game.room).emit("gameOver", message);[m
+[31m-  }[m
+[32m+[m[32m  if (!game) return;[m
+[32m+[m
+[32m+[m[32m  clearInterval(game.timer);[m
+[32m+[m[32m  game.time = { ...game.resetTime };[m
+[32m+[m[32m  game.isPlaying = false;[m
+[32m+[m[32m  game.sideOnMove = "white";[m
+[32m+[m[32m  game.board = null;[m
+[32m+[m
+[32m+[m[32m  socket.to(game.room).emit("gameOver", message);[m
+ };[m
+ [m
+ module.exports = handleGameOver;[m
+[1mdiff --git a/src/listeners/game-listeners.js b/src/listeners/game-listeners.js[m
+[1mindex 3f6e1b1..83eaf37 100644[m
+[1m--- a/src/listeners/game-listeners.js[m
+[1m+++ b/src/listeners/game-listeners.js[m
+[36m@@ -31,7 +31,8 @@[m [mmodule.exports = (io, socket) => {[m
+   socket.on("getTime", handleGetTime);[m
+   socket.on("gameOver", handleGameOver);[m
+   socket.on("reconnect", handleReconnect);[m
+[31m-  socket.on("disconnect", handleDisconnect);[m
+[32m+[m[32m  socket.on("disconnect", () => handleDisconnect(socket, io));[m
+[32m+[m[32m  socket.on("leaveRoom", () => handleDisconnect(socket, io));[m
+   socket.on("spectator", handleSpectator);[m
+   socket.on("flip", handleFlip);[m
+ };[m

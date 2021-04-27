@@ -31,7 +31,8 @@ module.exports = (io, socket) => {
   socket.on("getTime", handleGetTime);
   socket.on("gameOver", handleGameOver);
   socket.on("reconnect", handleReconnect);
-  socket.on("disconnect", handleDisconnect);
+  socket.on("disconnect", () => handleDisconnect(socket, io));
+  socket.on("leaveRoom", () => handleDisconnect(socket, io));
   socket.on("spectator", handleSpectator);
   socket.on("flip", handleFlip);
 };
